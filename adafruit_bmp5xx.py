@@ -282,6 +282,11 @@ class BMP5XX:
     def temperature(self) -> float:
         """Temperature in degress C."""
         raw_t = self._temperature
+
+        # check if sign bit is set and correct the value if so
+        if raw_t & 0b100000000000000000000000:
+            raw_t -= 1 << 24 
+
         return raw_t / 65536.0
 
     @property
