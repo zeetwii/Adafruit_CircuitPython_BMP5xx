@@ -285,7 +285,7 @@ class BMP5XX:
 
         # check if sign bit is set and correct the value if so
         if raw_t & 0b100000000000000000000000:
-            raw_t -= 1 << 24 
+            raw_t -= 1 << 24
 
         return raw_t / 65536.0
 
