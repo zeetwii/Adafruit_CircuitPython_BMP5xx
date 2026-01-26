@@ -180,8 +180,8 @@ class BMP5XX:
     pressure_oor_interrupt: bool = RWBit(BMP5_REG_INT_STATUS, 3)
     """True when pressure is OOR."""
 
-    _temperature = ROBits(24, BMP5XX_REG_TEMP_DATA_XLSB, 0, 3)
-    _pressure = ROBits(24, BMP5XX_REG_PRESS_DATA_XLSB, 0, 3)
+    _temperature = ROBits(24, BMP5XX_REG_TEMP_DATA_XLSB, 0, 3, signed=True)
+    _pressure = ROBits(24, BMP5XX_REG_PRESS_DATA_XLSB, 0, 3, signed=True)
     _mode = RWBits(2, BMP5XX_REG_ODR_CONFIG, 0)
 
     deep_disabled = RWBit(BMP5XX_REG_ODR_CONFIG, 7)
@@ -282,11 +282,6 @@ class BMP5XX:
     def temperature(self) -> float:
         """Temperature in degress C."""
         raw_t = self._temperature
-
-        # check if sign bit is set and correct the value if so
-        if raw_t & 0b100000000000000000000000:
-            raw_t -= 1 << 24
-
         return raw_t / 65536.0
 
     @property
